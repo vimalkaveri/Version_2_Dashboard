@@ -3,7 +3,7 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
-const Profile = () => {
+const Device = () => {
   return (
     <Container fluid>
       <Row className="mb-4">
@@ -68,4 +68,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Device;

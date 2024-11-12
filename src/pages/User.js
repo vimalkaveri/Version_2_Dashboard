@@ -3,12 +3,12 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 
-const Settings = () => {
+const User = () => {
   return (
     <Container fluid>
       <Row className="mb-4">
         <Col>
-          <h1>Settings</h1>
+          <h1>User</h1>
           <p>Welcome to your dashboard! Here you can manage everything.</p>
         </Col>
       </Row>
@@ -68,4 +68,4 @@ const Settings = () => {
   );
 };
 
-export default Settings;
+export default User;

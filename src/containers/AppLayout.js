@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Container } from "react-bootstrap";
 import TheSidebar from "./TheSidebar";
 import TheHeader from "./TheHeader";
 import TheFooter from "./TheFooter";
 import Dashboard from "../pages/Dashboard";
-import Settings from "../pages/Settings";
-import Profile from "../pages/Profile";
+import Device from "../pages/Device";
 import Help from "../pages/Help";
-import { Container } from "react-bootstrap";
+import User from "../pages/User";
 
 const AppLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -36,9 +36,11 @@ const AppLayout = () => {
         >
           <Container fluid>
             <Routes>
+              <Route index element={<Dashboard />} />{" "}
+              {/* Default route to Dashboard */}
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/device" element={<Device />} />
+              <Route path="/user" element={<User />} />
               <Route path="/help" element={<Help />} />
             </Routes>
           </Container>

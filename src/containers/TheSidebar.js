@@ -3,12 +3,14 @@ import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import {
   FaHome,
-  FaCog,
   FaUser,
   FaQuestionCircle,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
+
+import { TbDeviceHeartMonitor } from 'react-icons/tb';
+
 import logo from "../assets/logo.png";
 
 const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
@@ -39,7 +41,7 @@ const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
       >
         <img
           src={logo}
-          alt="Logo"
+          alt="SiFe"
           width={isCollapsed ? "50" : "120"} // Adjust logo size on collapse
           height={isCollapsed ? "15" : "30"}
           className="d-inline-block align-top"
@@ -65,22 +67,22 @@ const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
 
         <Nav.Link
           as={Link}
-          to="/settings"
+          to="/device"
           className="text-black d-flex align-items-center"
           style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
         >
-          <FaCog
+          <TbDeviceHeartMonitor
             style={{
               marginRight: isCollapsed ? "0" : "10px",
               fontSize: isCollapsed ? "20px" : "24px",
             }}
           />
-          {!isCollapsed && "Settings"}
+          {!isCollapsed && "Device"}
         </Nav.Link>
 
         <Nav.Link
           as={Link}
-          to="/profile"
+          to="/user"
           className="text-black d-flex align-items-center"
           style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
         >
@@ -90,7 +92,7 @@ const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
               fontSize: isCollapsed ? "20px" : "24px",
             }}
           />
-          {!isCollapsed && "Profile"}
+          {!isCollapsed && "User"}
         </Nav.Link>
 
         <Nav.Link
