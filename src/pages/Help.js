@@ -2,34 +2,45 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FaSyncAlt, FaSearch } from "react-icons/fa";
-import { Line } from "react-chartjs-2";
+import { FaSyncAlt } from "react-icons/fa";
+import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  LineElement,
+  BarElement,
   CategoryScale,
   LinearScale,
-  PointElement,
+  ArcElement,
+  Tooltip,
+  Legend,
 } from "chart.js";
 
-// Register required chart.js components
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  // Sample data and options for Line Chart 1
+  const resetDatePickers = () => {
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   const data1 = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
       {
-        label: "Dataset 1",
+        label: "Alert",
         data: [65, 59, 80, 81, 56, 55, 40],
-        borderColor: "rgba(75, 192, 192, 1)",
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
-        tension: 0.4,
-        fill: true,
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.6)",
+        barThickness: 30,
       },
     ],
   };
@@ -38,27 +49,41 @@ const Dashboard = () => {
     responsive: true,
     plugins: {
       legend: {
-        display: true,
+        display: false,
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw}`,
+        },
       },
     },
     scales: {
       y: {
         beginAtZero: true,
+        title: { display: true, text: "Value" },
+      },
+      x: {
+        title: { display: true, text: "Month" },
       },
     },
   };
 
-  // Sample data and options for Line Chart 2
   const data2 = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
       {
-        label: "Dataset 2",
-        data: [28, 48, 40, 19, 86, 27, 90],
-        borderColor: "rgba(153, 102, 255, 1)",
-        backgroundColor: "rgba(153, 102, 255, 0.2)",
-        tension: 0.4,
-        fill: true,
+        label: "Calls",
+        data: [28, 48, 40, 19, 86, 27, 60],
+        borderColor: "rgba(51, 0, 0, 1)",
+        backgroundColor: "rgba(51, 0, 0, 0.6)",
+        barThickness: 20,
+      },
+      {
+        label: "SMS",
+        data: [20, 48, 40, 25, 84, 20, 65],
+        borderColor: "rgba(115,96,91,1)",
+        backgroundColor: "rgba(115,96,91,0.6)",
+        barThickness: 20,
       },
     ],
   };
@@ -69,64 +94,99 @@ const Dashboard = () => {
       legend: {
         display: true,
       },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${context.raw}`,
+        },
+      },
     },
     scales: {
       y: {
         beginAtZero: true,
+        title: { display: true, text: "Value" },
+      },
+      x: {
+        title: { display: true, text: "Month" },
       },
     },
   };
+const pieData = {
+  labels: ["Active", "Inactive", "Availed", "On Progress"],
+  datasets: [
+    {
+      data: [30, 20, 25, 25], // Example values
+      backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#007bff"], // Colors
+      hoverBackgroundColor: [
+        "#28a745cc",
+        "#dc3545cc",
+        "#ffc107cc",
+        "#007bffcc",
+      ], // Hover colors
+    },
+  ],
+};
+
+const pieOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: "right", // Position legend to the right
+    },
+    tooltip: {
+      callbacks: {
+        label: (context) => `${context.label}: ${context.raw}`, // Display raw value only
+      },
+    },
+    datalabels: {
+      color: "#fff", // Label color
+      font: {
+        size: 14, // Font size
+        weight: "bold",
+      },
+      formatter: (value, context) => value, // Display raw value inside chart
+    },
+  },
+};
+
 
   return (
     <Container fluid>
-      {/* Other rows here */}
       <Row className="gx-2 gy-4">
-        <Col md={4} className="gx-2 gy-4">
-          <Card style={{ minHeight: "775px", marginTop: "10px" }}>
-            <Card.Header
-              as="h5"
-              className="d-flex align-items-center justify-content-between"
-            >
+        <Col md={4}>
+          <Card>
+            <Card.Header>
               <span>Alert</span>
-              <div className="d-flex justify-content-end align-items-center">
-                <div className="col-4" style={{ marginRight: "15px" }}>
-                  <DatePicker
-                    selected={startDate}
-                    onChange={(date) => setStartDate(date)}
-                    dateFormat="dd-MM-yyyy"
-                    className="form-control"
-                    placeholderText="From"
-                  />
-                </div>
-                <div className="col-4">
-                  <DatePicker
-                    selected={endDate}
-                    onChange={(date) => setEndDate(date)}
-                    dateFormat="dd-MM-yyyy"
-                    className="form-control"
-                    placeholderText="To"
-                    minDate={startDate}
-                  />
-                </div>
+              <div className="d-flex align-items-center">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  dateFormat="dd-MM-yyyy"
+                  placeholderText="From"
+                />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  dateFormat="dd-MM-yyyy"
+                  placeholderText="To"
+                  minDate={startDate}
+                />
                 <FaSyncAlt
-                  style={{
-                    cursor: "pointer",
-                    fontSize: "20px",
-                    marginLeft: "10px",
-                  }}
-                  onClick={() => {
-                    setStartDate(null);
-                    setEndDate(null);
-                  }}
+                  onClick={resetDatePickers}
+                  style={{ cursor: "pointer" }}
                 />
               </div>
             </Card.Header>
-            <Card.Body style={{ padding: "10px" }}>
-              <Card.Title>Line Chart 1</Card.Title>
-              <Line data={data1} options={options1} />
-
-              <Card.Title className="mt-4">Line Chart 2</Card.Title>
-              <Line data={data2} options={options2} />
+            <Card.Body>
+              <Bar data={data1} options={options1} />
+              <Bar data={data2} options={options2} />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={4}>
+          <Card>
+            <Card.Header as="h5">Simple Pie Chart</Card.Header>
+            <Card.Body>
+              <Pie data={pieData} options={pieOptions} />
             </Card.Body>
           </Card>
         </Col>

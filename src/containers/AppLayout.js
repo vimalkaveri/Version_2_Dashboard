@@ -16,7 +16,7 @@ const AppLayout = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
-  const sidebarWidth = isSidebarCollapsed ? "80px" : "250px"; // Dynamically set the sidebar width
+  const sidebarWidth = isSidebarCollapsed ? "80px" : "250px";
 
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -28,16 +28,15 @@ const AppLayout = () => {
         />
         <div
           style={{
-            marginLeft: sidebarWidth, // Dynamically adjust content based on sidebar state
-            width: `calc(100% - ${sidebarWidth})`, // Ensure content takes up remaining space
+            marginLeft: sidebarWidth,
+            width: `calc(100% - ${sidebarWidth})`,
             transition: "margin-left 0.3s ease", // Smooth transition for content shift
             paddingTop: "20px",
           }}
         >
           <Container fluid>
             <Routes>
-              <Route index element={<Dashboard />} />{" "}
-              {/* Default route to Dashboard */}
+              <Route index element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/device" element={<Device />} />
               <Route path="/user" element={<User />} />
@@ -46,8 +45,7 @@ const AppLayout = () => {
           </Container>
         </div>
       </div>
-      <TheFooter isSidebarCollapsed={isSidebarCollapsed} />{" "}
-      {/* Pass sidebar state to footer */}
+      <TheFooter isSidebarCollapsed={isSidebarCollapsed} />
     </div>
   );
 };

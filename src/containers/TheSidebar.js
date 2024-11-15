@@ -1,6 +1,11 @@
 import React from "react";
-import { Nav } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import {
+  CSidebar,
+  CSidebarNav,
+  CNavItem,
+  CNavLink,
+  CImage,
+} from "@coreui/react";
 import {
   FaHome,
   FaUser,
@@ -8,110 +13,137 @@ import {
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
-
-import { TbDeviceHeartMonitor } from 'react-icons/tb';
-
+import { TbDeviceHeartMonitor } from "react-icons/tb";
 import logo from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
   return (
-    <div
-      className={`bg-#adc5cf ${isCollapsed ? "collapsed" : ""}`}
+    <CSidebar
+      unfoldable
+      visible={!isCollapsed}
       style={{
-        width: isCollapsed ? "80px" : "250px",
         position: "fixed",
         top: "0",
         left: "0",
         height: "100vh",
-        paddingTop: "20px",
-        paddingLeft: "10px",
-        zIndex: "1000",
-        transition: "width 0.3s ease",
+        width: isCollapsed ? "80px" : "250px",
         backgroundColor: "#E6E6E7",
+        transition: "width 0.3s ease",
+        zIndex: "1000",
+        boxShadow: "2px 0px 15px rgba(0, 0, 0, 0.1)",
       }}
     >
-      {/* Logo inside sidebar */}
-      <div
-        className="text-center mb-4"
-        style={{
-          backgroundColor: "#E6E6E7",
-          padding: "10px",
-          borderRadius: "8px",
-        }}
-      >
-        <img
+      {/* Logo */}
+      <div className="text-center my-3">
+        <CImage
           src={logo}
           alt="SiFe"
-          width={isCollapsed ? "50" : "120"} // Adjust logo size on collapse
+          width={isCollapsed ? "50" : "120"}
           height={isCollapsed ? "15" : "30"}
-          className="d-inline-block align-top"
         />
       </div>
 
-      {/* Navigation Links */}
-      <Nav className="flex-column">
-        <Nav.Link
-          as={Link}
-          to="/dashboard"
-          className="text-black d-flex align-items-center"
-          style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
-        >
-          <FaHome
-            style={{
-              marginRight: isCollapsed ? "0" : "10px",
-              fontSize: isCollapsed ? "20px" : "24px",
-            }}
-          />
-          {!isCollapsed && "Dashboard"}
-        </Nav.Link>
+      <CSidebarNav
+        style={{
+          padding: 15, // Removes any default padding
+          listStyleType: "none", // Removes the bullets from the list
+        }}
+      >
+        {/* Dashboard Link */}
+        <CNavItem>
+          <Link to="/dashboard">
+            <CNavLink
+              className="d-flex align-items-center text-black"
+              style={{
+                padding: isCollapsed ? "10px" : "15px 20px",
+                fontWeight: "500",
+                textDecoration: "none", // Removes underline
+                transition: "background-color 0.3s ease",
+              }}
+            >
+              <FaHome
+                style={{
+                  marginRight: isCollapsed ? "0" : "10px",
+                  fontSize: isCollapsed ? "20px" : "22px",
+                }}
+              />
+              {!isCollapsed && "Dashboard"}
+            </CNavLink>
+          </Link>
+        </CNavItem>
 
-        <Nav.Link
-          as={Link}
-          to="/device"
-          className="text-black d-flex align-items-center"
-          style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
-        >
-          <TbDeviceHeartMonitor
-            style={{
-              marginRight: isCollapsed ? "0" : "10px",
-              fontSize: isCollapsed ? "20px" : "24px",
-            }}
-          />
-          {!isCollapsed && "Device"}
-        </Nav.Link>
+        {/* Device Link */}
+        <CNavItem>
+          <Link to="/device">
+            <CNavLink
+              className="d-flex align-items-center text-black"
+              style={{
+                padding: isCollapsed ? "10px" : "15px 20px",
+                fontWeight: "500",
+                textDecoration: "none", // Removes underline
+                transition: "background-color 0.3s ease",
+              }}
+            >
+              <TbDeviceHeartMonitor
+                style={{
+                  marginRight: isCollapsed ? "0" : "10px",
+                  fontSize: isCollapsed ? "20px" : "22px",
+                }}
+              />
+              {!isCollapsed && "Device"}
+            </CNavLink>
+          </Link>
+        </CNavItem>
 
-        <Nav.Link
-          as={Link}
-          to="/user"
-          className="text-black d-flex align-items-center"
-          style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
-        >
-          <FaUser
-            style={{
-              marginRight: isCollapsed ? "0" : "10px",
-              fontSize: isCollapsed ? "20px" : "24px",
-            }}
-          />
-          {!isCollapsed && "User"}
-        </Nav.Link>
+        {/* User Link */}
+        <CNavItem>
+          <Link to="/user">
+            <CNavLink
+              className="d-flex align-items-center text-black"
+              style={{
+                padding: isCollapsed ? "10px" : "15px 20px",
+                fontWeight: "500",
+                textDecoration: "none", // Removes underline
+                transition: "background-color 0.3s ease",
+              }}
+            >
+              <FaUser
+                style={{
+                  marginRight: isCollapsed ? "0" : "10px",
+                  fontSize: isCollapsed ? "20px" : "22px",
+                }}
+              />
+              {!isCollapsed && "User"}
+            </CNavLink>
+          </Link>
+        </CNavItem>
 
-        <Nav.Link
-          as={Link}
-          to="/help"
-          className="text-black d-flex align-items-center"
-          style={{ paddingLeft: isCollapsed ? "10px" : "20px" }}
-        >
-          <FaQuestionCircle
-            style={{
-              marginRight: isCollapsed ? "0" : "10px",
-              fontSize: isCollapsed ? "20px" : "24px",
-            }}
-          />
-          {!isCollapsed && "Help"}
-        </Nav.Link>
-      </Nav>
+        {/* Help Link */}
+        <CNavItem>
+          <Link to="/help">
+            <CNavLink
+              className="d-flex align-items-center text-black"
+              style={{
+                padding: isCollapsed ? "10px" : "15px 20px",
+                fontWeight: "500",
+                textDecoration: "none", // Removes underline
+                transition: "background-color 0.3s ease",
+              }}
+            >
+              <FaQuestionCircle
+                style={{
+                  marginRight: isCollapsed ? "0" : "10px",
+                  fontSize: isCollapsed ? "20px" : "22px",
+                }}
+              />
+              {!isCollapsed && "Help"}
+            </CNavLink>
+          </Link>
+        </CNavItem>
+      </CSidebarNav>
 
-      {/* Button to toggle sidebar width */}
+      {/* Toggle Button */}
       <div
         onClick={toggleSidebar}
         style={{
@@ -123,12 +155,24 @@ const TheSidebar = ({ isCollapsed, toggleSidebar }) => {
         }}
       >
         {isCollapsed ? (
-          <FaChevronRight style={{ color: "#0d6efd", fontSize: "20px" }} />
+          <FaChevronRight
+            style={{
+              color: "#0d6efd",
+              fontSize: "20px",
+              transition: "transform 0.3s ease",
+            }}
+          />
         ) : (
-          <FaChevronLeft style={{ color: "#0d6efd", fontSize: "20px" }} />
+          <FaChevronLeft
+            style={{
+              color: "#0d6efd",
+              fontSize: "20px",
+              transition: "transform 0.3s ease",
+            }}
+          />
         )}
       </div>
-    </div>
+    </CSidebar>
   );
 };
 

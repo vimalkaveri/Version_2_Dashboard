@@ -1,3 +1,4 @@
+import { CFooter } from "@coreui/react";
 import React from "react";
 import { Container } from "react-bootstrap";
 
@@ -8,7 +9,7 @@ const TheFooter = ({ isSidebarCollapsed }) => {
     : "calc(100% - 250px)";
 
   return (
-    <footer
+    <CFooter
       className="text-black text-left py-2"
       style={{
         width: footerWidth, // Dynamically adjust width based on sidebar state
@@ -20,9 +21,9 @@ const TheFooter = ({ isSidebarCollapsed }) => {
       }}
     >
       <Container fluid>
-        <span>&copy; 2024 My App. All rights reserved.</span>
+        <span className="ml-1">&copy; 2024 SiFe Engineering.</span>
       </Container>
-    </footer>
+    </CFooter>
   );
 };
 
