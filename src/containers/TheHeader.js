@@ -13,7 +13,7 @@ const TheHeader = () => {
       expand="lg"
       colorScheme="light"
       className="bg-light"
-      style={{ padding: "5px 10px" }}
+      style={{ padding: "5px 10px", backgroundColor: "#F8F9FA" }}
     >
       <CContainer fluid>
         <CNavbarNav className="ms-auto">

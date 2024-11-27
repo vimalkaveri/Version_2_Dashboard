@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { Container, Row, Col, Card, Button, Dropdown } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FaSyncAlt, FaSearch, FaBell } from "react-icons/fa";
+import { FaSyncAlt, FaSearch, FaBell, FaTachometerAlt } from "react-icons/fa";
+import { CgMenuRight } from "react-icons/cg";
 import { Bar, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -27,7 +28,8 @@ ChartJS.register(
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [data, setData] = useState(null); // Set initial data state as null
+  const [data, setData] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   // Sample data and options for Bar Chart 1
   const alert = {
@@ -37,8 +39,8 @@ const Dashboard = () => {
         label: "Alert",
         data: [65, 59, 80, 81, 56, 55, 40],
         borderColor: "rgba(255, 0, 0, 1)",
-        backgroundColor: "rgba(255, 0, 0, 0.6)",
-        barThickness: 30, // Adjusted bar thickness
+        backgroundColor: "rgba(255, 0, 0, 0.7)",
+        barThickness: 20, // Adjusted bar thickness
       },
     ],
   };
@@ -58,77 +60,134 @@ const Dashboard = () => {
   };
 
   // Sample data and options for Bar Chart 2 with unique colors and bar thickness
-  const callSMS = {
+  // SMS Data
+  const SMS = {
     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
       {
-        label: "Call",
+        label: "Delivered",
         data: [28, 48, 40, 19, 86, 27, 60],
-        borderColor: "rgba(57,108,47,1)",
-        backgroundColor: "rgba(57,108,47, 0.6)",
-        barThickness: 20,
+        borderColor: "rgba(0,136,17,1)",
+        backgroundColor: "rgba(0,136,17, 0.7)", // Slightly darker for emphasis
+        barThickness: 15,
       },
       {
-        label: "SMS",
+        label: "Failed",
         data: [20, 48, 40, 25, 84, 20, 65],
-        borderColor: "rgba(163,198,100,1)",
-        backgroundColor: "rgba(163,198,100,0.6)",
-        barThickness: 20,
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.7)",
+        barThickness: 15,
       },
     ],
   };
 
+  // Call Data
+  const call = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    datasets: [
+      {
+        label: "Completed",
+        data: [28, 48, 40, 19, 86, 27, 60],
+        borderColor: "rgba(0,136,17,1)", // Blue for completed
+        backgroundColor: "rgba(0,136,17,0.7)",
+        barThickness: 15,
+      },
+      {
+        label: "No Answer",
+        data: [10, 4, 15, 5, 4, 0, 5],
+        borderColor: "rgba(255,206,86,1)", // Yellow for no answer
+        backgroundColor: "rgba(255,206,86,0.7)",
+        barThickness: 15,
+      },
+      {
+        label: "Failed",
+        data: [2, 8, 4, 5, 4, 2, 5],
+        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.7)",
+        barThickness: 15,
+      },
+    ],
+  };
+
+  // Chart Options
   const callSMSoptions = {
     responsive: true,
     plugins: {
       legend: {
         display: true,
+        position: "top", // Place legend at the top
       },
     },
     scales: {
+      x: {
+        grid: {
+          display: false, // Hide gridlines for x-axis
+        },
+      },
       y: {
         beginAtZero: true,
+        grid: {
+          color: "rgba(200,200,200,0.5)", // Light gray gridlines
+        },
       },
     },
   };
-const pieData = {
-  labels: ["Active", "Inactive", "Availed", "On Progress"],
-  datasets: [
-    {
-      data: [30, 20, 25, 25], // Example values
-      backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#007bff"], // Colors
-      hoverBackgroundColor: [
-        "#28a745cc",
-        "#dc3545cc",
-        "#ffc107cc",
-        "#007bffcc",
-      ], // Hover colors
-    },
-  ],
-};
 
-const pieOptions = {
-  responsive: true,
-  maintainAspectRatio: false, // Allow custom size without keeping the aspect ratio
-  plugins: {
-    legend: {
-      position: "top", // Position legend to the right
-    },
-    tooltip: {
-      callbacks: {
-        label: (context) => `${context.label}: ${context.raw}`, // Display raw value only
+  const pieData = {
+    labels: ["Active", "Inactive", "Available", "On Progress"],
+    datasets: [
+      {
+        data: [80, 10, 7, 3],
+        backgroundColor: ["#28a745", "#dc3545", "#ffc107", "#007bff"],
+        hoverBackgroundColor: [
+          "#28a745cc",
+          "#dc3545cc",
+          "#ffc107cc",
+          "#007bffcc",
+        ],
+      },
+    ],
+  };
+
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.label}: ${context.raw}`,
+        },
+      },
+      datalabels: {
+        color: "#fff",
+        font: {
+          size: 14,
+          weight: "bold",
+        },
+        formatter: (value) => value,
       },
     },
-    datalabels: {
-      color: "#fff", // Label color
-      font: {
-        size: 14, // Font size
-        weight: "bold",
-      },
-      formatter: (value, context) => value, // Display raw value inside chart
+    animation: {
+      animateScale: true,
+      animateRotate: true,
+      duration: 1000,
+      easing: "easeInOutQuart",
     },
-  },
-};
+  };
+  const toggleMenu = () => {
+    setShowMenu((prev) => !prev);
+  };
+
+  const menuOptions = [
+    { label: "Last month 1", action: () => alert("Option 1 Selected") },
+    { label: "Last Three Month", action: () => alert("Option 2 Selected") },
+    { label: "Last Six Months", action: () => alert("Option 3 Selected") },
+    { label: "Last Nine Month", action: () => alert("Option 4 Selected") },
+    { label: "Show All", action: () => alert("Option 5 Selected") },
+  ];
   const handleRefresh = () => {
     // Simulate fetching data (you can replace this with actual API call)
     setData(null); // Reset to null to simulate 'No Data' state
@@ -140,46 +199,41 @@ const pieOptions = {
 
   return (
     <Container fluid>
-      {/* 
-      <Row className="mb-4">
-        <Col>
-          <h1>Dashboard</h1>
-        </Col>
-      </Row>
-      */}
-      <Row className="gx-2 gy-4">
+      <Row>
         <Col md={5} className="gx-2 gy-4">
           <Card>
             <Card.Header
+              className="d-flex justify-content-between align-items-center"
               style={{
-                fontWeight: "bold",
-                backgroundColor: "#0D6EFD", // Set your desired background color here
-                color: "#ffffff", // Set your desired text color here
+                fontWeight: 600,
+                fontSize: "13px",
               }}
             >
               <div>Device Summary</div>
             </Card.Header>
-            <Card.Body style={{ padding: "20px", backgroundColor: "#f7f8fa" }}>
+            <Card.Body style={{ backgroundColor: "#f7f8fa" }}>
               <Row className="gy-3">
                 <Col md={3} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Total</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>
-                    122
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>Total</div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>122</div>
+                </Col>
+                <Col md={3} style={{ textAlign: "center" }}>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                    Active
                   </div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>121</div>
                 </Col>
                 <Col md={3} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Active</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>
-                    121
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                    Inactive
                   </div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>01</div>
                 </Col>
                 <Col md={3} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Inactive</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>01</div>
-                </Col>
-                <Col md={3} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Available</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>0</div>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                    Available
+                  </div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>0</div>
                 </Col>
               </Row>
             </Card.Body>
@@ -188,39 +242,90 @@ const pieOptions = {
 
         <Col md={3} className="gx-2 gy-4">
           <Card>
-            <Card.Header>
+            <Card.Header
+              className="d-flex justify-content-between align-items-center"
+              style={{ fontWeight: 600, fontSize: "13px" }}
+            >
               {" "}
-              <div style={{ fontWeight: "bold" }}>Alert</div>
+              <div>Alert</div>
+              <div style={{ position: "relative", display: "inline-block" }}>
+                {/* Menu Icon */}
+                <CgMenuRight
+                  size={20}
+                  style={{ cursor: "pointer" }}
+                  onClick={toggleMenu}
+                />
+                {showMenu && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "30px",
+                      right: "0px",
+                      background: "#fff",
+                      border: "1px solid #ddd",
+                      borderRadius: "4px",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                      zIndex: 10,
+                      width: "160px",
+                      fontSize: "13px",
+                    }}
+                  >
+                    {menuOptions.map((option, index) => (
+                      <div
+                        key={index}
+                        onClick={() => {
+                          option.action(); // Execute the option's action
+                          toggleMenu(); // Close the menu
+                        }}
+                        style={{
+                          padding: "5px 20px",
+                          cursor: "pointer",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.target.style.backgroundColor = "#f1f1f1")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.backgroundColor = "transparent")
+                        }
+                      >
+                        {option.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </Card.Header>
-            <Card.Body style={{ padding: "20px", backgroundColor: "#f7f8fa" }}>
-              <Card.Title></Card.Title>
+            <Card.Body style={{ backgroundColor: "#f7f8fa" }}>
               <Row className="gy-3">
                 <Col md={4} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Alert</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>10</div>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>Alert</div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>10</div>
                 </Col>
                 <Col md={4} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>Calls</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>08</div>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>Calls</div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>08</div>
                 </Col>
                 <Col md={4} style={{ textAlign: "center" }}>
-                  <div style={{ fontWeight: "bold" }}>SMS</div>
-                  <div style={{ fontSize: "1.5em", marginTop: "10px" }}>06</div>
+                  <div style={{ fontWeight: 600, fontSize: "13px" }}>SMS</div>
+                  <div style={{ fontSize: "13px", marginTop: "10px" }}>06</div>
                 </Col>
               </Row>
             </Card.Body>
           </Card>
         </Col>
+
         <Col md={4} className="gx-2 gy-4">
           <Card
             style={{
-              minHeight: "250px",
+              minHeight: "200px",
               display: "flex",
               flexDirection: "column",
             }}
           >
             <Card.Header>
-              <div style={{ fontWeight: "bold" }}>Job Status</div>
+              <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                Job Status
+              </div>
             </Card.Header>
             <Card.Body
               style={{
@@ -252,12 +357,27 @@ const pieOptions = {
         </Col>
       </Row>
 
-      <Row className="gx-2 gy-2">
+      <Row>
         <Col xs={12} md={4} className="gx-2 gy-4">
           <Card style={{ minHeight: "355px", marginTop: "-95px" }}>
             <Card.Header>
               {" "}
-              <div style={{ fontWeight: "bold" }}>Transactions</div>
+              <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                Transactions
+              </div>
+            </Card.Header>
+            <Card.Body
+              style={{ padding: "10px", backgroundColor: "#f7f8fa" }}
+            ></Card.Body>
+          </Card>
+        </Col>
+        <Col xs={12} md={4} className="gx-2 gy-4">
+          <Card style={{ minHeight: "355px", marginTop: "-95px" }}>
+            <Card.Header>
+              {" "}
+              <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                Upcoming Payments
+              </div>
             </Card.Header>
             <Card.Body style={{ padding: "10px", backgroundColor: "#f7f8fa" }}>
               <Card.Title></Card.Title>
@@ -266,24 +386,13 @@ const pieOptions = {
             </Card.Body>
           </Card>
         </Col>
-        <Col xs={12} md={4} className="gx-2 gy-4">
-          <Card style={{ minHeight: "355px", marginTop: "-95px" }}>
-            <Card.Header>
-              {" "}
-              <div style={{ fontWeight: "bold" }}>Upcoming Payments</div>
-            </Card.Header>
-            <Card.Body style={{ padding: "10px", backgroundColor: "#f7f8fa" }}>
-              <Card.Title></Card.Title>
-              <Row></Row>
-              <Row></Row>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={4} className="gx-2 gy-2">
-          <Card style={{ minHeight: "268px", marginTop: "8px" }}>
+        <Col md={4} className="gx-2 gy-0">
+          <Card style={{ minHeight: "275px", marginTop: "8px" }}>
             <Card.Header
               as="h5"
               style={{
+                fontWeight: 600,
+                fontSize: "13px",
                 display: "flex", // Use flexbox to align the content
                 justifyContent: "space-between", // Space between title and icon
                 alignItems: "center", // Center align items vertically
@@ -302,83 +411,124 @@ const pieOptions = {
         </Col>
       </Row>
 
-      <Row className="gx-2 gy-4">
+      <Row className="gy-4">
         <Col md={8} className="gx-2 gy-4">
-          <Card style={{ minHeight: "600px", marginTop: "10px" }}>
+          <Card
+            style={{
+              minHeight: "610px",
+              marginTop: "10px",
+              flexDirection: "column",
+            }}
+          >
             <Card.Header
-              as="h5"
-              className="text-bg-primary d-flex justify-content-between align-items-center"
+              className="d-flex justify-content-between align-items-center"
+              style={{ fontWeight: 600, fontSize: "13px" }}
             >
               <span>User Summary</span>
+              {/* Actions Section */}
               <div className="d-flex align-items-center">
-                <div className="input-group">
+                {/* Search Input */}
+                <div className="input-group me-2">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Search"
-                    style={{ width: "150px" }}
+                    style={{ fontSize: "12px", width: "150px" }}
                   />
                   <span
                     className="input-group-text"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", fontSize: "12px" }}
                   >
                     <FaSearch />
                   </span>
-                  <button class="btn btn-primary">Create new User</button>
                 </div>
+
+                {/* Create User Button */}
+                <button
+                  className="btn btn-primary me-2"
+                  style={{
+                    fontSize: "12px",
+                    padding: "5px 10px",
+                    whiteSpace: "nowrap", // Prevent text wrapping
+                  }}
+                >
+                  Create New Site
+                </button>
               </div>
             </Card.Header>
-            <Card.Body style={{ padding: "10px", backgroundColor: "#f7f8fa" }}>
+            <Card.Body style={{ padding: "0px", backgroundColor: "#f7f8fa" }}>
               <Row>
                 <Col md={12}>
-                  <Card style={{ minHeight: "100px", marginBottom: "0px" }}>
+                  <Card
+                    style={{
+                      border: "none",
+                      minHeight: "80px",
+                      marginBottom: "0px",
+                    }}
+                  >
                     <Card.Body>
                       <Card.Text>
-                        <Row className="gy-3">
-                          {/* Statistics */}
-                          <Col md={2} style={{ textAlign: "center" }}>
-                            <div style={{ fontWeight: "bold" }}>Client</div>
-                            <div
-                              style={{ fontSize: "1.5em", marginTop: "10px" }}
-                            >
-                              03
-                            </div>
-                          </Col>
-                          <Col md={2} style={{ textAlign: "center" }}>
-                            <div style={{ fontWeight: "bold" }}>
-                              Origination
+                        {/* Statistics */}
+                        <Row style={{ margin: "0 -30px" }}>
+                          <Col
+                            md={2}
+                            style={{ textAlign: "center", padding: "0 5px" }}
+                          >
+                            <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                              Client
                             </div>
                             <div
-                              style={{ fontSize: "1.5em", marginTop: "10px" }}
+                              style={{ fontSize: "13px", marginTop: "10px" }}
                             >
                               05
                             </div>
                           </Col>
-                          <Col md={2} style={{ textAlign: "center" }}>
-                            <div style={{ fontWeight: "bold" }}>Site</div>
+                          <Col
+                            md={2}
+                            style={{ textAlign: "center", padding: "0 5px" }}
+                          >
+                            <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                              Organization
+                            </div>
                             <div
-                              style={{ fontSize: "1.5em", marginTop: "10px" }}
+                              style={{ fontSize: "13px", marginTop: "10px" }}
                             >
                               10
                             </div>
                           </Col>
-
-                          {/* Adding the dropdowns aligned to the right */}
                           <Col
-                            md={6}
+                            md={2}
+                            style={{ textAlign: "center", padding: "0 5px" }}
+                          >
+                            <div style={{ fontWeight: 600, fontSize: "13px" }}>
+                              Site
+                            </div>
+                            <div
+                              style={{ fontSize: "13px", marginTop: "10px" }}
+                            >
+                              03
+                            </div>
+                          </Col>
+                          {/* Dropdowns aligned to the right */}
+                          <Col
+                            md={5}
                             className="d-flex justify-content-end align-items-center"
                             style={{ paddingRight: 0 }}
                           >
-                            <div className="d-flex justify-content-end align-items-center w-100">
+                            <div
+                              className="d-flex justify-content-end align-items-center w-100"
+                              style={{ fontWeight: 600, fontSize: "13px" }}
+                            >
                               <div className="mx-2">
                                 <Dropdown className="me-2">
                                   <Dropdown.Toggle
                                     variant="secondary"
-                                    id="dropdown1"
+                                    id="dropdown2"
+                                    style={{ fontSize: "13px" }}
                                   >
-                                    Client
+                                    All Client
                                   </Dropdown.Toggle>
-                                  <Dropdown.Menu>
+                                  <Dropdown.Menu style={{ fontSize: "12px" }}>
                                     <Dropdown.Item href="#/action-1">
                                       Client 1
                                     </Dropdown.Item>
@@ -396,10 +546,11 @@ const pieOptions = {
                                   <Dropdown.Toggle
                                     variant="secondary"
                                     id="dropdown2"
+                                    style={{ fontSize: "13px" }}
                                   >
                                     All Organization
                                   </Dropdown.Toggle>
-                                  <Dropdown.Menu>
+                                  <Dropdown.Menu style={{ fontSize: "12px" }}>
                                     <Dropdown.Item href="#/action-1">
                                       Organization 1
                                     </Dropdown.Item>
@@ -417,10 +568,11 @@ const pieOptions = {
                                   <Dropdown.Toggle
                                     variant="secondary"
                                     id="dropdown3"
+                                    style={{ fontSize: "13px" }}
                                   >
                                     All Site
                                   </Dropdown.Toggle>
-                                  <Dropdown.Menu>
+                                  <Dropdown.Menu style={{ fontSize: "12px" }}>
                                     <Dropdown.Item href="#/action-1">
                                       Site 1
                                     </Dropdown.Item>
@@ -433,19 +585,6 @@ const pieOptions = {
                                   </Dropdown.Menu>
                                 </Dropdown>
                               </div>
-                              <div className="mx-2">
-                                <FaSyncAlt
-                                  style={{
-                                    cursor: "pointer",
-                                    fontSize: "20px",
-                                    marginLeft: "10px",
-                                  }}
-                                  onClick={() => {
-                                    setStartDate(null);
-                                    setEndDate(null);
-                                  }}
-                                />
-                              </div>
                             </div>
                           </Col>
                         </Row>
@@ -456,8 +595,8 @@ const pieOptions = {
               </Row>
 
               {/* Nested Column 1 */}
-              <Row className="g-0">
-                <Col md={7} style={{ height: "600px" }}>
+              <Row className="fs-6 g-0">
+                <Col md={7} style={{ height: "610px" }}>
                   {" "}
                   {/* Set fixed height for the column */}
                   <Card
@@ -475,24 +614,23 @@ const pieOptions = {
                         flexDirection: "column",
                         justifyContent: "flex-start", // Align items at the top
                         padding: "20px",
+                        fontSize: "13px",
                         overflowY: "auto", // Make content scrollable if it exceeds the height
                       }}
                     >
                       <Row className="mb-3 g-1">
-                        <Col>
+                        <Col style={{ marginLeft: "-10px" }}>
                           <Card
                             style={{
-                              padding: "15px",
+                              padding: "10px",
                               textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
+                              width: "230px", // Set the width of the Card
+                              height: "90px", // Set the height of the Card
                               borderRadius: "10px", // Adjust border radius for rounded corners
                               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
                             }}
                           >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
+                            <div style={{ fontWeight: 600 }}>
                               SiFe Engineering
                             </div>
                             <div>client Name</div>
@@ -508,20 +646,18 @@ const pieOptions = {
                           </Card>
                         </Col>
 
-                        <Col>
+                        <Col style={{ marginRight: "-15px" }}>
                           <Card
                             style={{
-                              padding: "15px",
+                              padding: "10px",
                               textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
+                              width: "230px", // Set the width of the Card
+                              height: "90px", // Set the height of the Card
                               borderRadius: "10px", // Adjust border radius for rounded corners
                               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
                             }}
                           >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
+                            <div style={{ fontWeight: 600 }}>
                               BASICE ELEMENT
                             </div>
                             <div>ignicop</div>
@@ -537,56 +673,51 @@ const pieOptions = {
                           </Card>
                         </Col>
                       </Row>
-
-                      <Row className="mb-3  g-1">
-                        <Col>
+                      <Row className="mb-3 g-1">
+                        <Col style={{ marginLeft: "-10px" }}>
                           <Card
                             style={{
-                              padding: "15px",
+                              padding: "10px",
                               textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
+                              width: "230px", // Set the width of the Card
+                              height: "90px", // Set the height of the Card
                               borderRadius: "10px", // Adjust border radius for rounded corners
                               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
                             }}
                           >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              KALPATARU INDUSTRIES
+                            <div style={{ fontWeight: 600 }}>
+                              SiFe Engineering
                             </div>
-                            <div>Kalpataru</div>
+                            <div>client Name</div>
                             <Row>
-                              <Col style={{ textAlign: "left" }}>117</Col>
+                              <Col style={{ textAlign: "left" }}>100</Col>
                               {/* Total Device Count */}
                               <Col style={{ textAlign: "right" }}>
                                 {" "}
-                                16-02-2024
+                                01-01-2024
                               </Col>{" "}
                               {/* client join date */}
                             </Row>
                           </Card>
                         </Col>
 
-                        <Col>
+                        <Col style={{ marginRight: "-15px" }}>
                           <Card
                             style={{
-                              padding: "15px",
+                              padding: "10px",
                               textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
+                              width: "230px", // Set the width of the Card
+                              height: "90px", // Set the height of the Card
                               borderRadius: "10px", // Adjust border radius for rounded corners
                               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
                             }}
                           >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              INDIAN IOL CORPORATION
+                            <div style={{ fontWeight: 600 }}>
+                              BASICE ELEMENT
                             </div>
-                            <div>IOCL</div>
+                            <div>ignicop</div>
                             <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
+                              <Col style={{ textAlign: "left" }}>95</Col>
                               {/* Total Device Count */}
                               <Col style={{ textAlign: "right" }}>
                                 {" "}
@@ -597,149 +728,28 @@ const pieOptions = {
                           </Card>
                         </Col>
                       </Row>
-
-                      <Row className="mb-3  g-1">
-                        <Col>
+                      <Row className="mb-3 g-1">
+                        <Col style={{ marginLeft: "-10px" }}>
                           <Card
                             style={{
-                              padding: "15px",
+                              padding: "10px",
                               textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
+                              width: "230px", // Set the width of the Card
+                              height: "90px", // Set the height of the Card
                               borderRadius: "10px", // Adjust border radius for rounded corners
                               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
                             }}
                           >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              Indian Oil Corporation
+                            <div style={{ fontWeight: 600 }}>
+                              SiFe Engineering
                             </div>
                             <div>client Name</div>
                             <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
+                              <Col style={{ textAlign: "left" }}>100</Col>
                               {/* Total Device Count */}
                               <Col style={{ textAlign: "right" }}>
                                 {" "}
-                                08-05-2024
-                              </Col>{" "}
-                              {/* client join date */}
-                            </Row>
-                          </Card>
-                        </Col>
-
-                        <Col>
-                          <Card
-                            style={{
-                              padding: "15px",
-                              textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
-                              borderRadius: "10px", // Adjust border radius for rounded corners
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
-                            }}
-                          >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              Indian Oil Corporation
-                            </div>
-                            <div>client Name</div>
-                            <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
-                              {/* Total Device Count */}
-                              <Col style={{ textAlign: "right" }}>
-                                {" "}
-                                08-05-2024
-                              </Col>{" "}
-                              {/* client join date */}
-                            </Row>
-                          </Card>
-                        </Col>
-                      </Row>
-                      <Row className="mb-3  g-1">
-                        <Col>
-                          <Card
-                            style={{
-                              padding: "15px",
-                              textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
-                              borderRadius: "10px", // Adjust border radius for rounded corners
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
-                            }}
-                          >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              Indian Oil Corporation
-                            </div>
-                            <div>client Name</div>
-                            <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
-                              {/* Total Device Count */}
-                              <Col style={{ textAlign: "right" }}>
-                                {" "}
-                                08-05-2024
-                              </Col>{" "}
-                              {/* client join date */}
-                            </Row>
-                          </Card>
-                        </Col>
-
-                        <Col>
-                          <Card
-                            style={{
-                              padding: "15px",
-                              textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
-                              borderRadius: "10px", // Adjust border radius for rounded corners
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
-                            }}
-                          >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              Indian Oil Corporation
-                            </div>
-                            <div>client Name</div>
-                            <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
-                              {/* Total Device Count */}
-                              <Col style={{ textAlign: "right" }}>
-                                {" "}
-                                08-05-2024
-                              </Col>{" "}
-                              {/* client join date */}
-                            </Row>
-                          </Card>
-                        </Col>
-                      </Row>
-                      <Row className="mb-3  g-1">
-                        <Col>
-                          <Card
-                            style={{
-                              padding: "15px",
-                              textAlign: "left",
-                              width: "280px", // Set the width of the Card
-                              height: "120px", // Set the height of the Card
-                              borderRadius: "10px", // Adjust border radius for rounded corners
-                              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", // Add shadow for depth
-                            }}
-                          >
-                            <div
-                              style={{ fontWeight: "bold", fontSize: "18px" }}
-                            >
-                              Indian Oil Corporation
-                            </div>
-                            <div>client Name</div>
-                            <Row>
-                              <Col style={{ textAlign: "left" }}>1</Col>
-                              {/* Total Device Count */}
-                              <Col style={{ textAlign: "right" }}>
-                                {" "}
-                                08-05-2024
+                                01-01-2024
                               </Col>{" "}
                               {/* client join date */}
                             </Row>
@@ -751,7 +761,7 @@ const pieOptions = {
                 </Col>
 
                 {/* Nested Column 2 */}
-                <Col md={5} style={{ height: "600px" }}>
+                <Col md={5} style={{ height: "610px" }}>
                   {" "}
                   {/* Set fixed height for the column */}
                   <Card
@@ -772,24 +782,47 @@ const pieOptions = {
                         overflowY: "auto", // Make content scrollable if it exceeds the height
                       }}
                     >
-                      <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-                        SiFe Engineering
+                      <div
+                        style={{
+                          display: "flex", // Enables flexbox
+                          justifyContent: "space-between", // Positions items at opposite ends
+                          alignItems: "center", // Aligns items vertically
+                          fontWeight: 600,
+                          fontSize: "15px",
+                        }}
+                      >
+                        <span>SiFe Engineering</span>
+                        <FaTachometerAlt
+                          style={{ fontSize: "20px", cursor: "pointer" }}
+                          title="Dashboard" // This adds a browser-native tooltip
+                        />
                       </div>
+
                       <div
                         style={{
                           marginTop: "-8px",
                           padding: "0px",
                         }}
                       >
-                        <div style={{ fontSize: "18px", marginTop: "10px" }}>
+                        <div style={{ fontSize: "13px", marginTop: "10px" }}>
                           Client Name
                         </div>
-                        <div style={{ fontSize: "18px" }}>+91 9976006560</div>
-                        <div style={{ fontSize: "18px" }}>support@sife.in</div>
+                        <div style={{ fontSize: "13px" }}>+91 9976006560</div>
+                        <div style={{ fontSize: "13px" }}>support@sife.in</div>
+                        <div style={{ fontSize: "13px" }}>Balance: 1500</div>
+                        <div style={{ fontSize: "13px" }}>
+                          Expire on: 31-12-2024{" "}
+                        </div>
                       </div>
                       {/* Different section for additional details */}
                       <div>
-                        <div style={{ width: "400px", height: "300px" }}>
+                        <div
+                          style={{
+                            width: "300px",
+                            height: "300px",
+                            marginTop: "10px",
+                          }}
+                        >
                           <Pie data={pieData} options={pieOptions} />
                         </div>
 
@@ -798,61 +831,84 @@ const pieOptions = {
                             display: "flex", // Use Flexbox for layout
                             flexWrap: "wrap", // Allow content to wrap to the next line
                             gap: "10px", // Space between the columns
+                            marginTop: "10px",
                           }}
                         >
                           <Row className="gy-3">
                             {/* First Row, Column 1 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>Device</div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
+                                Device
+                              </div>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 100
                               </div>
                             </Col>
                             {/* First Row, Column 2 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
                                 Organization
                               </div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 10
                               </div>
                             </Col>
                             {/* First Row, Column 3 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>Sites</div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
+                                Sites
+                              </div>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 30
                               </div>
                             </Col>
                             {/* Second Row, Column 1 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>Alerts</div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
+                                Alerts
+                              </div>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 80
                               </div>
                             </Col>
                             {/* Second Row, Column 2 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>Calls</div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
+                                Calls
+                              </div>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 350
                               </div>
                             </Col>
                             {/* Second Row, Column 3 */}
                             <Col md={4} style={{ textAlign: "center" }}>
-                              <div style={{ fontWeight: "bold" }}>SMS</div>
                               <div
-                                style={{ fontSize: "1.5em", marginTop: "10px" }}
+                                style={{ fontWeight: 600, fontSize: "13px" }}
+                              >
+                                SMS
+                              </div>
+                              <div
+                                style={{ fontWeight: 600, fontSize: "13px" }}
                               >
                                 300
                               </div>
@@ -869,20 +925,35 @@ const pieOptions = {
         </Col>
 
         <Col md={4} className="gx-2 gy-4">
-          <Card style={{ minHeight: "780px", marginTop: "10px" }}>
+          <Card
+            style={{
+              minHeight: "600px",
+              marginTop: "10px",
+              flexDirection: "column",
+            }}
+          >
             <Card.Header
-              as="h5"
-              className="d-flex align-items-center justify-content-between"
+              className="d-flex justify-content-between align-items-center"
+              style={{ fontWeight: 600, fontSize: "13px" }}
             >
               <span>Alert</span>
               <div className="d-flex justify-content-end align-items-center">
-                <div className="col-4" style={{ marginRight: "15px" }}>
+                <div
+                  className="col-4"
+                  style={{
+                    marginRight: "13px",
+                  }}
+                >
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
                     dateFormat="dd-MM-yyyy"
                     className="form-control"
                     placeholderText="From"
+                    style={{
+                      width: "100px",
+                      padding: "5px",
+                    }}
                   />
                 </div>
                 <div className="col-4">
@@ -893,12 +964,16 @@ const pieOptions = {
                     className="form-control"
                     placeholderText="To"
                     minDate={startDate}
+                    style={{
+                      width: "100px",
+                      padding: "5px",
+                    }}
                   />
                 </div>
                 <FaSyncAlt
                   style={{
                     cursor: "pointer",
-                    fontSize: "20px",
+                    fontSize: "13px",
                     marginLeft: "10px",
                   }}
                   onClick={() => {
@@ -908,12 +983,33 @@ const pieOptions = {
                 />
               </div>
             </Card.Header>
-            <Card.Body style={{ padding: "10px" }}>
-              <Card.Title>Alert</Card.Title>
+            <Card.Body
+              style={{
+                padding: "10px",
+                maxHeight: "685px", // Set a maximum height
+                overflowY: "auto", // Enable vertical scrolling for overflowing content
+              }}
+            >
+              <Card.Title style={{ fontWeight: 600, fontSize: "13px" }}>
+                Alert
+              </Card.Title>
               <Bar data={alert} options={alertoptions} />
 
-              <Card.Title className="mt-4">Call & SMS</Card.Title>
-              <Bar data={callSMS} options={callSMSoptions} />
+              <Card.Title
+                className="mt-4"
+                style={{ fontWeight: 600, fontSize: "13px" }}
+              >
+                SMS
+              </Card.Title>
+              <Bar data={SMS} options={callSMSoptions} />
+
+              <Card.Title
+                className="mt-4"
+                style={{ fontWeight: 600, fontSize: "13px" }}
+              >
+                Call
+              </Card.Title>
+              <Bar data={call} options={callSMSoptions} />
             </Card.Body>
           </Card>
         </Col>

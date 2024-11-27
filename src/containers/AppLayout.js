@@ -4,10 +4,10 @@ import { Container } from "react-bootstrap";
 import TheSidebar from "./TheSidebar";
 import TheHeader from "./TheHeader";
 import TheFooter from "./TheFooter";
-import Dashboard from "../pages/Dashboard";
-import Device from "../pages/Device";
-import Help from "../pages/Help";
-import User from "../pages/User";
+import Dashboard from "../Sidebarpages/Dashboard";
+import Device from "../Sidebarpages/Device";
+import Help from "../Sidebarpages/Help";
+import User from "../Sidebarpages/User";
 
 const AppLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
